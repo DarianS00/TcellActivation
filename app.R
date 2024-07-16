@@ -13,8 +13,6 @@ library(png)
 
 
 
-#you have to press Run App in the top right for the embedded picture to be displayed (I have no clue why lol)
-
 
 
 # Define initial values for sliders
@@ -240,7 +238,7 @@ server <- function(input,output,session) {
   }, ignoreNULL = FALSE)
   
   
-  observeEvent(input$recalculate, {      # this observeEvent part is used to connect the observation (clicking the actionbutton) to the calculating of the plot. 
+  observeEvent(input$recalculate, {     
     
     # Increment the counter each time the button is clicked
     click_count(click_count() + 1)
@@ -312,7 +310,7 @@ server <- function(input,output,session) {
     # Combine all results into a single data frame
     results <- do.call(rbind, results)
     
-    # Now, add columns for each numeric input, repeating the values for the length of the results dataframe
+    # add columns for each numeric input, repeating the values for the length of the results dataframe
     results$phi <- rep(input$phi_value, nrow(results))
     results$lambda <- rep(input$lambda_value, nrow(results))
     results$delta <- rep(input$delta_value, nrow(results))
@@ -352,7 +350,7 @@ server <- function(input,output,session) {
     })
     
     
-    # Render the checkbox group input for the list of .rds files (this is what you see in the shinyApp)
+    # Render the checkbox group input for the list of .rds files 
     output$file_list <- renderUI({
       checkboxGroupInput("selected_files", "Select results to display:",
                          choices = rds_files(), selected = selected_runs())
@@ -366,19 +364,19 @@ server <- function(input,output,session) {
     # PLOTTING         
     #Generate colors for plotting 
     generate_colors <- function(num_runs) {
-      # Lade die turbo-Palette
+      # load turbo-palette
       all_colors <- viridis::viridis_pal(option = "turbo")(256)
       selected_colors <- character(num_runs)
       
-      # Die erste Farbe ist immer Rot
-      selected_colors[1] <- "#ff0000" # Rot in Hexadezimal
+      # red as first color
+      selected_colors[1] <- "#ff0000" 
       
       if (num_runs > 1) {
         for (i in 2:num_runs) {
           remaining_colors <- all_colors[!all_colors %in% selected_colors]
           max_dist <- 0
           for (color in remaining_colors) {
-            # Berechne den Abstand zwischen der aktuellen Farbe und allen bereits gewählten Farben
+            # calculate distance between current color and all before used colors
             dists <- sapply(selected_colors[1:(i-1)], function(selected_color) {
               sum((col2rgb(color) - col2rgb(selected_color))^2)
             })
@@ -484,7 +482,7 @@ server <- function(input,output,session) {
       
     }) 
     
-    #enable the Calculate button again
+    # enable the Calculate button again
     enable(id = "recalculate")
   })
   
@@ -806,7 +804,6 @@ server <- function(input,output,session) {
       # Retrieve the full paths of the selected RDS files
       selected_files_paths <- sapply(input$selected_files, function(file) {
         # Construct the full path to the file
-        # Assuming the files are stored in a specific directory, adjust as necessary
         file_path <- file.path(getwd(), file)
         return(file_path)
       })
@@ -815,7 +812,7 @@ server <- function(input,output,session) {
       # Pass the full paths of the selected files
       generate_and_save_plots(selected_files_paths)
       
-      # Optional: Display a message to indicate completion
+      # Display a message to indicate completion
       showNotification("Selected runs have been saved to desktop.", type = "message")
     } else {
       # No files selected, show a warning
