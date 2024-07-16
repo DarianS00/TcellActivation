@@ -793,7 +793,8 @@ server <- function(input,output,session) {
     }
     
     # Save the workbook
-    saveWorkbook(wb, "selected_runs_plots_and_data.xlsx", overwrite = TRUE)
+    path <- file.path(Sys.getenv("USERPROFILE"), "Desktop", "selected_runs_plots_and_data.xlsx")
+    saveWorkbook(wb, path, overwrite = TRUE)
   }
   
   
@@ -815,7 +816,7 @@ server <- function(input,output,session) {
       generate_and_save_plots(selected_files_paths)
       
       # Optional: Display a message to indicate completion
-      showNotification("Selected runs have been saved with plots.", type = "message")
+      showNotification("Selected runs have been saved to desktop.", type = "message")
     } else {
       # No files selected, show a warning
       showNotification("No runs selected to save.", type = "warning")
