@@ -15,7 +15,6 @@ library(png)
 
 #you have to press Run App in the top right for the embedded picture to be displayed (I have no clue why lol)
 
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 # Define initial values for sliders
